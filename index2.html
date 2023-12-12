@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WebSocket Demo</title>
+    <style>
+        #serverResponse {
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <h1>WebSocket Test</h1>
+    <div id="serverResponse">Ожидание ответа сервера...</div>
+
+    <script>
+        const ports = [50007, 50077, 50777, 57777];
+        
+        ports.forEach(port => {
+            let socket = new WebSocket(`ws://localhost:${port}`);
+
+            socket.onopen = () => console.log(`Connection established on port ${port}`);
+            socket.onerror = (error) => console.log(`Connection error on port ${port}:`, error);
+            socket.onclose = () => console.log(`Connection closed on port ${port}`);
+        });
+
+        socket.onopen = function(event) {
+            console.log("Connection established");
+
+            socket.send(JSON.stringify({ "type": "requestMarketingID" }));
+        };
+
+        socket.onmessage = function(event) {
+            console.log("Message from Server:", event.data);
+
+            document.getElementById('serverResponse').innerText = 'Ответ сервера: ' + event.data;
+        };
+
+        socket.onerror = function(error) {
+            console.error("WebSocket Error:", error);
+            document.getElementById('serverResponse').innerText = 'Ошибка WebSocket: ' + error;
+        };
+
+        socket.onclose = function(event) {
+            if (event.wasClean) {
+                console.log(`Connection closed cleanly, code=${event.code}, reason=${event.reason}`);
+            } else {
+                console.log('Connection died');
+            }
+        };
+    </script>
+</body>
+</html>
