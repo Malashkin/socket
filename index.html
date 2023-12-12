@@ -3,7 +3,7 @@
 <head>
     <title>WebSocket Demo</title>
     <style>
-        #serverResponse {
+        .serverResponse {
             padding: 10px;
             margin-top: 10px;
             border: 1px solid #ddd;
@@ -13,43 +13,33 @@
 </head>
 <body>
     <h1>WebSocket Test</h1>
-    <div id="serverResponse">Ожидание ответа сервера...</div>
+    <div id="responses"></div>
 
     <script>
         const ports = [50007, 50077, 50777, 57777];
-        
+        const responsesDiv = document.getElementById('responses');
+
         ports.forEach(port => {
             let socket = new WebSocket(`ws://localhost:${port}`);
+            const responseDiv = document.createElement('div');
+            responseDiv.classList.add('serverResponse');
+            responseDiv.textContent = `Попытка подключения к порту ${port}...`;
+            responsesDiv.appendChild(responseDiv);
 
-            socket.onopen = () => console.log(`Connection established on port ${port}`);
-            socket.onerror = (error) => console.log(`Connection error on port ${port}:`, error);
-            socket.onclose = () => console.log(`Connection closed on port ${port}`);
+            socket.onopen = () => {
+                responseDiv.textContent = `Соединение с портом ${port} установлено.`;
+            };
+
+            socket.onerror = (error) => {
+                responseDiv.textContent = `Ошибка соединения с портом ${port}.`;
+                console.log(`Connection error on port ${port}:`, error);
+            };
+
+            socket.onclose = () => {
+                responseDiv.textContent += ` Соединение с портом ${port} закрыто.`;
+                console.log(`Connection closed on port ${port}`);
+            };
         });
-
-        socket.onopen = function(event) {
-            console.log("Connection established");
-
-            socket.send(JSON.stringify({ "type": "requestMarketingID" }));
-        };
-
-        socket.onmessage = function(event) {
-            console.log("Message from Server:", event.data);
-
-            document.getElementById('serverResponse').innerText = 'Ответ сервера: ' + event.data;
-        };
-
-        socket.onerror = function(error) {
-            console.error("WebSocket Error:", error);
-            document.getElementById('serverResponse').innerText = 'Ошибка WebSocket: ' + error;
-        };
-
-        socket.onclose = function(event) {
-            if (event.wasClean) {
-                console.log(`Connection closed cleanly, code=${event.code}, reason=${event.reason}`);
-            } else {
-                console.log('Connection died');
-            }
-        };
     </script>
 </body>
 </html>
