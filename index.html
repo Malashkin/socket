@@ -39,13 +39,17 @@
             };
 
             socket.onerror = (error) => {
-                responseDiv.textContent = `Ошибка соединения с портом ${port}.`;
-                console.log(`Connection error on port ${port}:`, error);
+                const errorDiv = document.createElement('div');
+                errorDiv.classList.add('serverResponse');
+                errorDiv.textContent = `Ошибка соединения с портом ${port}: ${error.message}`;
+                responsesDiv.appendChild(errorDiv);
             };
 
             socket.onclose = () => {
-                responseDiv.textContent += ` Соединение с портом ${port} закрыто.`;
-                console.log(`Connection closed on port ${port}`);
+                const closeDiv = document.createElement('div');
+                closeDiv.classList.add('serverResponse');
+                closeDiv.textContent = `Соединение с портом ${port} закрыто.`;
+                responsesDiv.appendChild(closeDiv);
             };
         });
     </script>
