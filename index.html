@@ -18,7 +18,7 @@
     <script>
         const responsesDiv = document.getElementById('responses');
 
-            let socket = new WebSocket(`ws://localhost:50007`, 'v1');
+            let socket = new WebSocket(`wss://api-qa.diginetica.net/v1/prescoring/socket_endpoint`, 'v1');
             const responseDiv = document.createElement('div');
             responseDiv.classList.add('serverResponse');
             responseDiv.textContent = `Попытка подключения к порту 50007...`;
