@@ -20,14 +20,22 @@
         const responsesDiv = document.getElementById('responses');
 
         ports.forEach(port => {
-            let socket = new WebSocket(`ws://localhost:${port}`);
+            let socket = new WebSocket(`ws://localhost:${port}`, 'v1');
             const responseDiv = document.createElement('div');
             responseDiv.classList.add('serverResponse');
             responseDiv.textContent = `Попытка подключения к порту ${port}...`;
             responsesDiv.appendChild(responseDiv);
 
             socket.onopen = () => {
-                responseDiv.textContent = `Соединение с портом ${port} установлено.`;
+                responseDiv.textContent = `Соединение с портом ${port} установлено. Отправка запроса...`;
+                socket.send(JSON.stringify({ type: "requestMarketingID" }));
+            };
+
+            socket.onmessage = (event) => {
+                const messageDiv = document.createElement('div');
+                messageDiv.classList.add('serverResponse');
+                messageDiv.textContent = `Ответ от порта ${port}: ${event.data}`;
+                responsesDiv.appendChild(messageDiv);
             };
 
             socket.onerror = (error) => {
