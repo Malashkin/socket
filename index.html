@@ -20,7 +20,7 @@
         const responsesDiv = document.getElementById('responses');
 
         ports.forEach(port => {
-            let socket = new WebSocket(`ws://localhost:${port}`, 'v1');
+            let socket = new WebSocket(`ws://localhost:50007`, 'v1');
             const responseDiv = document.createElement('div');
             responseDiv.classList.add('serverResponse');
             responseDiv.textContent = `Попытка подключения к порту ${port}...`;
