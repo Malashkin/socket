@@ -16,42 +16,40 @@
     <div id="responses"></div>
 
     <script>
-        const ports = [50007, 50077, 50777, 57777];
         const responsesDiv = document.getElementById('responses');
 
-        ports.forEach(port => {
             let socket = new WebSocket(`ws://localhost:50007`, 'v1');
             const responseDiv = document.createElement('div');
             responseDiv.classList.add('serverResponse');
-            responseDiv.textContent = `Попытка подключения к порту ${port}...`;
+            responseDiv.textContent = `Попытка подключения к порту 50007...`;
             responsesDiv.appendChild(responseDiv);
 
             socket.onopen = () => {
-                responseDiv.textContent = `Соединение с портом ${port} установлено. Отправка запроса...`;
+                responseDiv.textContent = `Соединение с портом 50007 установлено. Отправка запроса...`;
                 socket.send(JSON.stringify({ type: "requestMarketingID" }));
             };
 
             socket.onmessage = (event) => {
                 const messageDiv = document.createElement('div');
                 messageDiv.classList.add('serverResponse');
-                messageDiv.textContent = `Ответ от порта ${port}: ${event.data}`;
+                messageDiv.textContent = `Ответ от порта 50007: ${event.data}`;
                 responsesDiv.appendChild(messageDiv);
             };
 
             socket.onerror = (error) => {
                 const errorDiv = document.createElement('div');
                 errorDiv.classList.add('serverResponse');
-                errorDiv.textContent = `Ошибка соединения с портом ${port}: ${error.message}`;
+                errorDiv.textContent = `Ошибка соединения с портом 50007: ${error.message}`;
                 responsesDiv.appendChild(errorDiv);
             };
 
             socket.onclose = () => {
                 const closeDiv = document.createElement('div');
                 closeDiv.classList.add('serverResponse');
-                closeDiv.textContent = `Соединение с портом ${port} закрыто.`;
+                closeDiv.textContent = `Соединение с портом 50007 закрыто.`;
                 responsesDiv.appendChild(closeDiv);
             };
-        });
+
     </script>
 </body>
 </html>
