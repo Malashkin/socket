@@ -1,55 +1,69 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <title>WebSocket Demo</title>
     <style>
-        .serverResponse {
-            padding: 10px;
-            margin-top: 10px;
-            border: 1px solid #ddd;
-            background-color: #f9f9f9;
-        }
+      .serverResponse {
+        padding: 10px;
+        margin-top: 10px;
+        border: 1px solid #ddd;
+        background-color: #f9f9f9;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <h1>WebSocket Test</h1>
     <div id="responses"></div>
 
     <script>
-        const responsesDiv = document.getElementById('responses');
+      const ports = [50007, 50077, 50777, 57777];
+      const responsesDiv = document.getElementById("responses");
 
-            let socket = new WebSocket(`ws://localhost:50007`, 'v1');
-            const responseDiv = document.createElement('div');
-            responseDiv.classList.add('serverResponse');
-            responseDiv.textContent = `Попытка подключения к порту 50007...`;
-            responsesDiv.appendChild(responseDiv);
+      function tryWebSocketConnection(portIndex) {
+        if (portIndex >= ports.length) {
+          console.log("Успешное соединение не удалось для всех портов.");
+          return;
+        }
 
-            socket.onopen = () => {
-                responseDiv.textContent = `Соединение с портом 50007 установлено. Отправка запроса...`;
-                socket.send(JSON.stringify({ type: "requestMarketingID" }));
-            };
+        const port = ports[portIndex];
+        const socket = new WebSocket(`ws://localhost:${port}`);
 
-            socket.onmessage = (event) => {
-                const messageDiv = document.createElement('div');
-                messageDiv.classList.add('serverResponse');
-                messageDiv.textContent = `Ответ от порта 50007: ${event.data}`;
-                responsesDiv.appendChild(messageDiv);
-            };
+        socket.onopen = () => {
+          const responseDiv = document.createElement("div");
+          responseDiv.classList.add("serverResponse");
+          responseDiv.textContent = `Соединение с портом ${port} установлено. Отправка запроса...`;
+          responsesDiv.appendChild(responseDiv);
+        };
 
-            socket.onerror = (error) => {
-                const errorDiv = document.createElement('div');
-                errorDiv.classList.add('serverResponse');
-                errorDiv.textContent = `Ошибка соединения с портом 50007: ${error.message}`;
-                responsesDiv.appendChild(errorDiv);
-            };
+        socket.onmessage = (event) => {
+          const messageDiv = document.createElement("div");
+          messageDiv.classList.add("serverResponse");
+          messageDiv.textContent = `Ответ от порта ${port}: ${event.data}`;
+          responsesDiv.appendChild(messageDiv);
 
-            socket.onclose = () => {
-                const closeDiv = document.createElement('div');
-                closeDiv.classList.add('serverResponse');
-                closeDiv.textContent = `Соединение с портом 50007 закрыто.`;
-                responsesDiv.appendChild(closeDiv);
-            };
+          console.log("Успешное соединение с портом:", port);
+        };
 
+        socket.onerror = (error) => {
+          const errorDiv = document.createElement("div");
+          errorDiv.classList.add("serverResponse");
+          errorDiv.textContent = `Ошибка соединения с портом ${port}: ${error.message}`;
+          responsesDiv.appendChild(errorDiv);
+
+          tryWebSocketConnection(portIndex + 1);
+        };
+
+        socket.onclose = () => {
+          const closeDiv = document.createElement("div");
+          closeDiv.classList.add("serverResponse");
+          closeDiv.textContent = `Соединение с портом ${port} закрыто.`;
+          responsesDiv.appendChild(closeDiv);
+
+          tryWebSocketConnection(portIndex + 1);
+        };
+      }
+
+      tryWebSocketConnection(0);
     </script>
-</body>
+  </body>
 </html>
