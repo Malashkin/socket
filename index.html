@@ -26,7 +26,7 @@
         }
 
         const port = ports[portIndex];
-        const socket = new WebSocket(`ws://localhost:${port}`);
+        const socket = new WebSocket(`ws://localhost:${port}`, 'v1');
 
         socket.onopen = () => {
           const responseDiv = document.createElement("div");
