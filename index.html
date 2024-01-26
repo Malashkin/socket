@@ -36,7 +36,7 @@
         socket.onopen = () => {
           const responseDiv = document.createElement("div");
           responseDiv.classList.add("serverResponse");
-          responseDiv.textContent = `Соединение с портом ${port} установлено. Отправка запроса...`;
+          responseDiv.textContent = `Соединение с портом ${port} (${protocol}) установлено. Отправка запроса...`;
           responsesDiv.appendChild(responseDiv);
 
           const message = { type: "requestMarketingID" };
@@ -46,7 +46,7 @@
         socket.onmessage = (event) => {
           const messageDiv = document.createElement("div");
           messageDiv.classList.add("serverResponse");
-          messageDiv.textContent = `Ответ от порта ${port}: ${event.data}`;
+          messageDiv.textContent = `Ответ от порта ${port} (${protocol}): ${event.data}`;
           responsesDiv.appendChild(messageDiv);
 
           console.log("Успешное соединение с портом:", port);
@@ -55,7 +55,7 @@
         socket.onerror = (error) => {
           const errorDiv = document.createElement("div");
           errorDiv.classList.add("serverResponse");
-          errorDiv.textContent = `Ошибка соединения с портом ${port}: ${error.message}`;
+          errorDiv.textContent = `Ошибка соединения с портом ${port} (${protocol}): ${error.message}`;
           responsesDiv.appendChild(errorDiv);
 
           tryWebSocketConnection(portIndex + 1);
