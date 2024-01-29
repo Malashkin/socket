@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self'; 'nonce-YourRandomNonce'; wss://localhost:50007 wss://localhost:50077 wss://localhost:50777 wss://localhost:57777 ws://localhost:50007 ws://localhost:50077 ws://localhost:50777 ws://localhost:57777;">
+   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'nonce-YourRandomNonce'; connect-src 'self' wss://localhost:50007 wss://localhost:50077 wss://localhost:50777 wss://localhost:57777 ws://localhost:50007 ws://localhost:50077 ws://localhost:50777 ws://localhost:57777;">
     <title>WebSocket Demo</title>
     <style>
       .serverResponse {
